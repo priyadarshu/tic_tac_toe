@@ -10,6 +10,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  var HUMAN_PLAYER = 1;
+  var COMPUTER_PLAYER = 2;
+
   List<GameBtn> buttonList;
 
   var player1;
@@ -42,15 +46,15 @@ class _HomePageState extends State<HomePage> {
 
   void playGame(GameBtn gb) {
     setState(() {
-      if (activePlayer == 1) {
+      if (activePlayer == HUMAN_PLAYER) {
         gb.text = 'x';
         gb.bg = Colors.redAccent;
-        activePlayer = 2;
+        activePlayer = COMPUTER_PLAYER;
         player1.add(gb.id);
       } else {
         gb.text = '0';
         gb.bg = Colors.black;
-        activePlayer = 1;
+        activePlayer = HUMAN_PLAYER;
         player2.add(gb.id);
       }
       gb.enabled = false;
@@ -63,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 "Press the reset button to start again", resetGame),
           );
         } else {
-          activePlayer == 2 ? autoPlay() : null;
+          activePlayer == COMPUTER_PLAYER ? autoPlay() : null;
         }
       }
     });
@@ -73,15 +77,17 @@ class _HomePageState extends State<HomePage> {
     var emptyCells = [];
     List list = List.generate(9, (i) => i + 1);
     for (var cellID in list) {
-      if ((!player1.contains(cellID) || player2.contains(cellID))) {
+      if ((!player1.contains(cellID) && !player2.contains(cellID))) {
         emptyCells.add(cellID);
       }
     }
+    print("Empty cells : ${emptyCells}");
 
     var r = new Random();
     var randIndex = r.nextInt(emptyCells.length - 1);
     var cellID = emptyCells[randIndex];
     int i = buttonList.indexWhere((p) => p.id == cellID);
+    print("selected button from computer move at $i");
     playGame(buttonList[i]);
   }
 
